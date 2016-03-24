@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title> Word Cloud </title>
+  <script src="jquery-2.1.3.js"></script>
+  <script src='script.js'> </script>
+  <script>
+  var allWords = null;
+  var wordCount = {};
+    var getCloudMU = function(data)
+    {
+      var result = "";
+
+       wordCount = {};theWords = []; 
+       allWords = data.match(/\b\w+\b/g);   //get all words in the document
+ 
+        for(var i = 0; i < allWords.length; i = i + 1){
+          allWords[i] = allWords[i].toLowerCase();
+          var word = allWords[i];
+          if(word.length>5){
+            if(wordCount[word]){
+              wordCount[word] = wordCount[word]+1;
+            }
+            else{
+              wordCount[word] = 1;
+            }
+          }
+        }
+      //write code here
+    for(var word in wordCount) {
+          if(wordCount[word] < 2) { 
+            delete wordCount[word];
+            continue;
+          }
+          result = result + " " + " <span style=\"color:#66ffcc;font-size:" + (9 + 4 * wordCount[word] )+ "px\">" 
+          + word + "</span>";
+        }
+      return result;
+    }
+
+    var getCloud = function()
+    {
+      var userInput = document.getElementById("choice").value;
+      var url = "./" + userInput;
+      var callback = function(data){
+        var res = data;
+        document.getElementById("result").innerHTML = getCloudMU(data);
+      }
+      loadURL(url, callback);
+    }
+  </script>
+  <style>
+  .cloud{
+      text-align: center;
+      margin: 10px;
+      padding: 10px;
+      border-radius: 5px;
+      border: dashed 1px;
+  }
+  </style>
+</head>
+
+<body onload='getCloud()'> 
+  <select id='choice' onchange='getCloud()'>
+    <option value='dream.txt'> I have a dream </option>
+    <option value='sense.txt'> Common Sense</option>
+  </select>
+  <div id='result' class='cloud'> </div>
+</body>
+</html>
